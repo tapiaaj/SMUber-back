@@ -104,7 +104,7 @@ $app->group('/api', function () use ($app) {
       return $this->response->withJson($input);
     });
   
-  $app->put('/edit', function($request, $response, $args){
+  $app->put('/edit-loc', function($request, $response, $args){
     $input=$request->getParsedBody();
     $sql="UPDATE location SET latitude=:latitude, longitude=:longitude WHERE ID=:ID";
     $sth=$this->db->prepare($sql);
