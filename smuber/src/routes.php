@@ -103,6 +103,18 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input);
     });
+  
+  $app->put('/edit', function($request, $response, $args){
+    $input=$request->getParsedBody();
+    $sql="UPDATE location SET latitude=:latitude, longitude=:longitude WHERE ID=:ID";
+    $sth=$this->db->prepare($sql);
+    $sth->bindParam("latitude",$args['latitude']);
+    $sth->bindParam("longitude",$input['longitude']);
+    $sth->bindParam("ID",$input['ID']);
+    $sth->execute();
+    return $this->response->withJson($input);
+});
+
 
 });
 
