@@ -131,7 +131,7 @@ $app->group('/api', function () use ($app) {
     $sth = $this->db->prepare("SELECT * FROM location WHERE userName=:userName");
     $sth->bindParam("userName", $args['userName']);
     $sth->execute();
-    $locationInfo = $sth->fetchObject();
+    $locationInfo = $sth->fetchAll();
     return $this->response->withJson($locationInfo);
 
 
