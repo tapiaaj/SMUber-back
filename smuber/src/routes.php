@@ -66,8 +66,8 @@ $app->group('/api', function () use ($app) {
       if($check === false){
         $qr = "INSERT INTO drivers (userName, pWord, lastName, firstName, id) 
         VALUES (:userName, :pWord, :lastName, :firstName, :id);
-        INSERT INTO location (latitude, longitude, userName)
-        VALUES (0, 0, :userName)";
+        INSERT INTO location (latitude, longitude, firstName, lastName)
+        VALUES (0, 0, :firstName, :lastName)";
         $sth = $this->db->prepare($qr);
         $sth->bindParam("userName", $input['userName']);
         $sth->bindParam("pWord", $input['pWord']);
