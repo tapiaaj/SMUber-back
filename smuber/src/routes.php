@@ -106,30 +106,30 @@ $app->group('/api', function () use ($app) {
   
   $app->put('/edit-loc', function($request, $response, $args){
     $input=$request->getParsedBody();
-    $sql="UPDATE location SET latitude=:latitude, longitude=:longitude WHERE ID=:ID";
+    $sql="UPDATE location SET latitude=:latitude, longitude=:longitude WHERE userName=:userName";
     $sth=$this->db->prepare($sql);
     $sth->bindParam("latitude",$args['latitude']);
     $sth->bindParam("longitude",$input['longitude']);
-    $sth->bindParam("ID",$input['ID']);
+    $sth->bindParam("userName",$input['userName']);
     $sth->execute();
     return $this->response->withJson($input);
 });
 
-$app->post('/location/add', function ($request, $response, $args) {
+$app->post('/add-loc', function ($request, $response, $args) {
   $input = $request->getParsedBody();
-  $sql = "INSERT INTO location (latitude, longitude, ID)
-          VALUES (:latitude, :longitude, :ID)";
+  $sql = "INSERT INTO location (latitude, longitude, userName)
+          VALUES (:latitude, :longitude, :userName)";
   $sth = $this->db->prepare($sql);
   $sth->bindParam("latitude",$input['latitude']);
   $sth->bindParam("longitude",$input['longitude']);
-  $sth->bindParam("ID",$input['ID']);
+  $sth->bindParam("userName",$input['userName']);
   $sth->execute();
   return $this->response->withJson($input);
 });
 
-$app->get('/location/[{ID}]', function($request, $response, $args){
-  $sth = $this->db->prepare("SELECT * FROM location WHERE ID=:ID");
-  $sth->bindParam("ID", $args['ID']);
+$app->get('/get-loc', function($request, $response, $args){
+  $sth = $this->db->prepare("SELECT * FROM location WHERE userName=:userName");
+  $sth->bindParam("userName", $args['userName']);
   $sth->execute();
   $locationInfo = $sth->fetchObject();
   return $this->response->withJson($locationInfo);
