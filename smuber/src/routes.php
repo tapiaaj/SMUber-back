@@ -23,22 +23,22 @@ $app->add(function ($req, $res, $next) {
 $app->post('/login', function (Request $request, Response $response, array $args) {
  
     $input = $request->getParsedBody();
-    $sql = "SELECT * FROM drivers WHERE userName= :userName";
+    $sql = "SELECT firstName, lastName FROM drivers WHERE userName= :userName";
     $sth = $this->db->prepare($sql);
     $sth->bindParam("userName", $input['userName']);
     $sth->execute();
     $user = $sth->fetchObject();
 
-    // verify email address.
+    // verify username
     if(!$user) {
         return $this->response->withJson(['error' => true]);  
     }
 
-    // verify password.
+    // verify password
     if ($input['pWord'] != $user->pWord) {
         return $this->response->withJson(['error' => true]);  
     }
-    return $this->response->withJson(['error' => false]);
+    return $this->response->withJson(['error' => false, $user]);
 
 });
 
@@ -131,8 +131,10 @@ $app->group('/api', function () use ($app) {
 
   $app->get('/get-loc', function($request, $response, $args){
     $input=$request->getParsedBody();
-    $sth = $this->db->prepare("SELECT latitude, longitude FROM location WHERE userName=:userName");
-    $sth->bindParam("userName", $input['userName']);
+    $sth = $this->db->prepare("SELECT latitude, longitude FROM location WHERE lastName=:lastName 
+    AND firstName=:firstName");
+    $sth->bindParam("firstName", $input['firstName']);
+    $sth->bindParam("lastName", $input['lastName']);
     $sth->execute();
     $locationInfo = $sth->fetchObject();
     return $this->response->withJson($locationInfo);
