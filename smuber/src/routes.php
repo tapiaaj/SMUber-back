@@ -65,7 +65,9 @@ $app->group('/api', function () use ($app) {
       $check = $sql->fetchObject();
       if($check === false){
         $qr = "INSERT INTO drivers (userName, pWord, lastName, firstName, id) 
-        VALUES (:userName, :pWord, :lastName, :firstName, :id)";
+        VALUES (:userName, :pWord, :lastName, :firstName, :id);
+        INSERT INTO location (latitude, longitude, userName)
+        VALUES (0, 0, :userName)";
         $sth = $this->db->prepare($qr);
         $sth->bindParam("userName", $input['userName']);
         $sth->bindParam("pWord", $input['pWord']);
@@ -115,7 +117,7 @@ $app->group('/api', function () use ($app) {
     return $this->response->withJson($input);
 });
 
-  $app->post('/add-loc', function ($request, $response, $args) {
+  /*$app->post('/add-loc', function ($request, $response, $args) {
     $input = $request->getParsedBody();
     $sql = "INSERT INTO location (latitude, longitude, userName)
             VALUES (:latitude, :longitude, :userName)";
@@ -125,16 +127,15 @@ $app->group('/api', function () use ($app) {
     $sth->bindParam("userName",$input['userName']);
     $sth->execute();
     return $this->response->withJson($input);
-  });
+  });*/
 
   $app->get('/get-loc', function($request, $response, $args){
-    $sth = $this->db->prepare("SELECT * FROM location WHERE userName=:userName");
-    $sth->bindParam("userName", $args['userName']);
+    $input=$request->getParsedBody();
+    $sth = $this->db->prepare("SELECT latitude, longitude FROM location WHERE userName=:userName");
+    $sth->bindParam("userName", $input['userName']);
     $sth->execute();
     $locationInfo = $sth->fetchObject();
     return $this->response->withJson($locationInfo);
-
-
   });
 
 });
