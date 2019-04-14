@@ -38,7 +38,7 @@ $app->post('/login', function (Request $request, Response $response, array $args
     if ($input['pWord'] != $user->pWord) {
         return $this->response->withJson(['error' => true]);  
     }
-    return $this->response->withJson(['error' => false, 'firstName' => $user->firstName, 'lastName' => $user->lastName]);
+    return $this->response->withJson(['error' => false]);
 
 });
 
@@ -121,10 +121,7 @@ $app->group('/api', function () use ($app) {
 
   $app->get('/get-loc', function($request, $response, $args){
     $input=$request->getParsedBody();
-    $sth = $this->db->prepare("SELECT latitude, longitude FROM location WHERE lastName=:lastName 
-    AND firstName=:firstName");
-    $sth->bindParam("firstName", $input['firstName']);
-    $sth->bindParam("lastName", $input['lastName']);
+    $sth = $this->db->prepare("SELECT * FROM location");
     $sth->execute();
     $locationInfo = $sth->fetchObject();
     return $this->response->withJson($locationInfo);
