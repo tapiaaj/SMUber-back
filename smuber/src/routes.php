@@ -31,12 +31,12 @@ $app->post('/login', function (Request $request, Response $response, array $args
 
     // verify username
     if(!$user) {
-        return $this->response->withJson(['error' => true]);  
+        return $this->response->withJson(['error' => 'username']);  
     }
 
     // verify password
     if ($input['pWord'] != $user->pWord) {
-        return $this->response->withJson(['error' => true]);  
+        return $this->response->withJson(['error' => 'pword']);  
     }
     return $this->response->withJson(['error' => false, 'firstName' => $user->firstName, 'lastName' => $user->lastName]);
 
