@@ -38,7 +38,7 @@ $app->post('/login', function (Request $request, Response $response, array $args
     if ($input['pWord'] != $user->pWord) {
         return $this->response->withJson(['error' => true]);  
     }
-    return $this->response->withJson(['error' => false, $user]);
+    return $this->response->withJson(['error' => false, 'firstName' => $user->firstName, 'lastName' => $user->lastName]);
 
 });
 
@@ -108,26 +108,16 @@ $app->group('/api', function () use ($app) {
   
   $app->put('/edit-loc', function($request, $response, $args){
     $input=$request->getParsedBody();
-    $sql="UPDATE location SET latitude=:latitude, longitude=:longitude WHERE userName=:userName";
+    $sql="UPDATE location SET latitude=:latitude, longitude=:longitude WHERE lastName=:lastName 
+    AND firstName=:firstName";
     $sth=$this->db->prepare($sql);
     $sth->bindParam("latitude",$input['latitude']);
     $sth->bindParam("longitude",$input['longitude']);
-    $sth->bindParam("userName",$input['userName']);
+    $sth->bindParam("firstName", $input['firstName']);
+    $sth->bindParam("lastName", $input['lastName']);
     $sth->execute();
     return $this->response->withJson($input);
 });
-
-  /*$app->post('/add-loc', function ($request, $response, $args) {
-    $input = $request->getParsedBody();
-    $sql = "INSERT INTO location (latitude, longitude, userName)
-            VALUES (:latitude, :longitude, :userName)";
-    $sth = $this->db->prepare($sql);
-    $sth->bindParam("latitude",$input['latitude']);
-    $sth->bindParam("longitude",$input['longitude']);
-    $sth->bindParam("userName",$input['userName']);
-    $sth->execute();
-    return $this->response->withJson($input);
-  });*/
 
   $app->get('/get-loc', function($request, $response, $args){
     $input=$request->getParsedBody();
