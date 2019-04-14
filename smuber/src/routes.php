@@ -23,7 +23,7 @@ $app->add(function ($req, $res, $next) {
 $app->post('/login', function (Request $request, Response $response, array $args) {
  
     $input = $request->getParsedBody();
-    $sql = "SELECT firstName, lastName FROM drivers WHERE userName= :userName";
+    $sql = "SELECT * FROM drivers WHERE userName= :userName";
     $sth = $this->db->prepare($sql);
     $sth->bindParam("userName", $input['userName']);
     $sth->execute();
@@ -31,12 +31,12 @@ $app->post('/login', function (Request $request, Response $response, array $args
 
     // verify username
     if(!$user) {
-        return $this->response->withJson(['error' => 'username']);  
+        return $this->response->withJson(['error' => true]);  
     }
 
     // verify password
     if ($input['pWord'] != $user->pWord) {
-        return $this->response->withJson(['error' => 'pword']);  
+        return $this->response->withJson(['error' => true]);  
     }
     return $this->response->withJson(['error' => false, 'firstName' => $user->firstName, 'lastName' => $user->lastName]);
 
