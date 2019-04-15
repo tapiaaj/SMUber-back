@@ -119,9 +119,9 @@ $app->group('/api', function () use ($app) {
 
   $app->get('/get-loc', function($request, $response, $args){
     $input=$request->getParsedBody();
-    $sth = $this->db->prepare("SELECT * FROM locations");
+    $sth = $this->db->prepare("SELECT latitude, longitude FROM locations");
     $sth->execute();
-    $locationInfo = $sth->fetchObject();
+    $locationInfo = $sth->fetchAll();
     return $this->response->withJson($locationInfo);
   });
 
